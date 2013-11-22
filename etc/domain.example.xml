@@ -1,0 +1,36 @@
+<domain type='lxc'>
+    <name>{{NAME}}</name>
+    <memory unit='KiB'>488281250</memory>
+    <currentMemory unit='KiB'>488281250</currentMemory>
+    <vcpu placement='static'>1</vcpu>
+    <resource>
+        <partition>/machine</partition>
+    </resource>
+    <os>
+        <type arch='x86_64'>exe</type>
+        <init>{{CONFIGDIR}}/init</init>
+        <initarg>{{NAME}}</initarg>
+    </os>
+    <clock offset='utc'/>
+    <on_poweroff>destroy</on_poweroff>
+    <on_reboot>restart</on_reboot>
+    <on_crash>restart</on_crash>
+    <devices>
+        <emulator>/usr/libexec/libvirt_lxc</emulator>
+        <filesystem type='mount' accessmode='passthrough'>
+            <source dir='/'/>
+            <target dir='/'/>
+            <readonly/>
+        </filesystem>
+        <filesystem type='mount' accessmode='passthrough'>
+            <source dir='/data'/>
+            <target dir='/data'/>
+        </filesystem>
+        <console type='pty'>
+            <target type='lxc' port='0'/>
+        </console>
+        <interface type='network'>
+            <source network='default'/>
+        </interface>
+    </devices>
+</domain>
