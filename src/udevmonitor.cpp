@@ -99,9 +99,12 @@ void UdevMonitor::m_rmDev(struct udev_device *dev)
     std::string id = devpath_;
 
     if (!devices.count(id)) {
-        std::cerr << "{udev} m_rmDev device never added\n";
+//        std::cerr << "{udev} m_rmDev device never added  " << id << std::endl;;
         return;
     }
+
+
+
 
     devices[id];
 

@@ -52,7 +52,8 @@ public:
 
         virDomainPtr dom = virDomainLookupByName(virt, name.c_str());
         if (dom) {
-            virDomainDestroy(dom);
+            if (virDomainIsActive(dom))
+                virDomainDestroy(dom);
             virDomainUndefine(dom);
             virDomainFree(dom);
         }
@@ -184,12 +185,15 @@ public:
         }
 
         const UdevMonitor::Device *parent = parentDevice(dev);
-        if (parent) {
-            HubContainer *container = managedHubs[parent];
-            if (container) {
-                container->onDeviceRemoved(dev);
-                return;
+        while (parent) {
+            if (!managedHubs[parent]) {
+                parent = parentDevice(parent);
+                continue;
             }
+
+            HubContainer *container = managedHubs[parent];
+            container->onDeviceRemoved(dev);
+            break;
         }
     }
 
@@ -250,7 +254,6 @@ static int myDomainEventCallback1(virConnectPtr conn ,
 
 void* virpoll(void*)
 {
-
     while (true) {
         if (virEventRunDefaultImpl())
             virtPrintError("virEventRunDefaultImpl");
