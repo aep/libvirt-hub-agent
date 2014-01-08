@@ -32,3 +32,10 @@ relative to the ini file (or an absolute path)  and replace these strings:
     {{NAME}}       - the name of the domain, as specified above
     {{CONFIGDIR}}  - path that the ini file was in
 
+
+
+Building
+==================
+
+
+docker pull  alanfranz/drb-epel-6-x86-64
