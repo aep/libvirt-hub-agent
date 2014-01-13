@@ -1,6 +1,6 @@
-Name:    hub-agent
+Name:    libvirt-hub-agent
 Version: 1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Hub Agent
 
 Group:   stuff
@@ -8,8 +8,8 @@ License: BSD
 URL:     http://invalid.com
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires: gcc libvirt-devel libudev-devel
-Requires: gcc libvirt
+BuildRequires: gcc libvirt-devel libudev-devel gcc-c++
+Requires: libvirt
 
 %description
 
@@ -31,8 +31,10 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 /usr/bin/libvirt-hub-agent
-/etc/libvirt-hub-agent/example.ini
-/etc/libvirt-hub-agent/domain.example.xml
+%config /etc/libvirt-hub-agent/agent.ini
+%config /etc/libvirt-hub-agent/domain.example.xml
+%config /etc/libvirt-hub-agent/init.example.sh
+/usr/lib/systemd/system/libvirt-hub-agent.service
 
 
 %changelog

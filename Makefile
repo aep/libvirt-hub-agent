@@ -1,4 +1,3 @@
-RPM     := hub-agent-1-1.el6.x86_64.rpm
 TARGET  := bin/libvirt-hub-agent
 SOURCES := \
 	src/udevmonitor.cpp \
@@ -18,15 +17,17 @@ clean:
 	rm -f ${RPM}
 
 
-BASE := alanfranz/drb-epel-6-x86-64
+#BASE := layilel/rpmbuild-f20
+BASE := fedora
 
-rpm  : $(RPM)
-$(RPM):
+
+rpm:
 	docker run -w ${PWD} -v ${PWD}:${PWD} ${BASE} \
 	make rpmi
 
 rpmi:
-	yum-builddep $${PWD}/hub-agent.spec
+	yum install -y yum-utils rpm-build make gcc
+	yum-builddep -y $${PWD}/hub-agent.spec
 	rpmbuild  \
 		--define "_topdir $${PWD}/rpmbuild" \
 		--define "_builddir ./" \
@@ -39,6 +40,11 @@ install:
 	install -d $(DESTDIR)/usr/bin/
 	install -d $(DESTDIR)/etc/
 	install -d $(DESTDIR)/etc/libvirt-hub-agent/
+	install -d $(DESTDIR)/usr/lib/
+	install -d $(DESTDIR)/usr/lib/systemd/
+	install -d $(DESTDIR)/usr/lib/systemd/system/
 	install -m 755 $(TARGET) $(DESTDIR)/usr/bin/
 	install -m 644 etc/domain.example.xml $(DESTDIR)/etc/libvirt-hub-agent/
-	install -m 644 etc/example.ini $(DESTDIR)/etc/libvirt-hub-agent/
+	install -m 644 etc/agent.ini $(DESTDIR)/etc/libvirt-hub-agent/
+	install -m 755 etc/init.example.sh  $(DESTDIR)/etc/libvirt-hub-agent/
+	install -m 755 etc/libvirt-hub-agent.service  $(DESTDIR)/usr/lib/systemd/system/

@@ -1,0 +1,15 @@
+[Unit]
+Description=Virtualization daemon
+After=libvirtd.service
+
+[Service]
+ExecStart=/usr/bin/libvirt-hub-agent /etc/libvirt-hub-agent/agent.ini
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=on-failure
+# Override the maximum number of opened files
+#LimitNOFILE=2048
+
+[Install]
+WantedBy=multi-user.target
+
